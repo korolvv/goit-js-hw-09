@@ -55,8 +55,8 @@ function addLeadingZero(value) {
 }
 
 function timerOn() {
-  const date = new Date();
-  let value = settedDate - date.getTime() + 1000;
+  const date = Date.now();
+  let value = settedDate - date;
 
   if (value <= 0) {
     Report.failure(
