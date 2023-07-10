@@ -14,16 +14,25 @@ const seconds = document.querySelector('[data-seconds]');
 
 const counters = { days, hours, minutes, seconds };
 
-let settedDate = 0;
-
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    // console.log(selectedDates[0]);
-    settedDate = selectedDates[0].getTime();
+    let settedDate = selectedDates[0].getTime() - date;
+    const date = Date.now();
+
+    if (settedDate <= 0) {
+      Report.failure(
+        'Not correct a date',
+        'Please choose a date in the future',
+        'Okay'
+      );
+      return;
+    } else {
+      startBtn.removeAttribute('disabled');
+    }
   },
 };
 flatpickr(inputCalendar, options);
@@ -50,34 +59,24 @@ function convertMs(ms) {
 }
 
 function addLeadingZero(value) {
-  value = String(value).padStart(2, '0');
-  return value;
+  return String(value).padStart(2, '0');
 }
 
-function timerOn() {
-  const date = Date.now();
-  let value = settedDate - date;
+function initialValue(data) {
+  const keys = Object.keys(data);
 
-  if (value <= 0) {
-    Report.failure(
-      'Not correct a date',
-      'Please choose a date in the future',
-      'Okay'
-    );
-    return;
+  for (const key of keys) {
+    counters[key].textContent = addLeadingZero(data[key]);
   }
-
+}
+function timerOn() {
   const timerId = setInterval(() => {
     value -= 1000;
     if (value <= 0) {
       clearInterval(timerId);
     } else {
       let dataDate = convertMs(value);
-      const keys = Object.keys(dataDate);
-
-      for (const key of keys) {
-        counters[key].textContent = addLeadingZero(dataDate[key]);
-      }
+      initialValue(dataDate);
     }
   }, 1000);
 
