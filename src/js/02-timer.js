@@ -20,8 +20,8 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    let settedDate = selectedDates[0].getTime() - date;
     const date = Date.now();
+    let settedDate = selectedDates[0].getTime() - date;
 
     if (settedDate <= 0) {
       Report.failure(
@@ -29,6 +29,7 @@ const options = {
         'Please choose a date in the future',
         'Okay'
       );
+      startBtn.setAttribute('disabled', 'disabled');
       return;
     } else {
       startBtn.removeAttribute('disabled');
