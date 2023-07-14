@@ -14,6 +14,8 @@ const seconds = document.querySelector('[data-seconds]');
 
 const counters = { days, hours, minutes, seconds };
 
+let settedDate = 0;
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -21,7 +23,7 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     const date = Date.now();
-    let settedDate = selectedDates[0].getTime() - date;
+    settedDate = selectedDates[0].getTime() - date;
 
     if (settedDate <= 0) {
       Report.failure(
@@ -72,11 +74,11 @@ function initialValue(data) {
 }
 function timerOn() {
   const timerId = setInterval(() => {
-    value -= 1000;
-    if (value <= 0) {
+    settedDate -= 1000;
+    if (settedDate <= 0) {
       clearInterval(timerId);
     } else {
-      let dataDate = convertMs(value);
+      let dataDate = convertMs(settedDate);
       initialValue(dataDate);
     }
   }, 1000);
